@@ -1,7 +1,7 @@
-#Url Shortner made by me
+# Url Shortner made by me
 I created this url shortner for fun using the CRUD principle and the Laravel framework
 
-##How to setup this project
+## How to setup this project
 * Clone this repo
 * `composer install`
 * `npm install`
