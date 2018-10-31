@@ -18,3 +18,5 @@ Route::resource('api', 'APIController')
     ->except(['create', 'destroy', 'edit', 'update', 'destroy']);
 
 Route::get('/{shortUrl}', 'APIController@show')->name('redirect');
+
+Route::post('/api/search/', 'APIController@showUrlInfo')->name('search');

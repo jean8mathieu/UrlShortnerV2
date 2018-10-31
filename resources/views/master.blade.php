@@ -9,6 +9,8 @@
     <script src="/js/jquery.min.js"></script>
     <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
     <meta content="{{ route("home") }}" name="website">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
 </head>
 <body>

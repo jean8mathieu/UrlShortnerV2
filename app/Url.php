@@ -20,6 +20,8 @@ class Url extends Model
      */
     protected $fillable = ['url', 'short_url', 'ip'];
 
+    protected $hidden = ['deleted_at', 'ip'];
+
     /**
      * Return the views from the url
      *

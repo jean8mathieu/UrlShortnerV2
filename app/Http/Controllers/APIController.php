@@ -38,7 +38,7 @@ class APIController extends Controller
     {
         $data = [];
 
-        foreach (Url::query()->orderBy('id', 'DESC')->limit(50)->get() as $u) {
+        foreach (Url::query()->orderBy('id', 'DESC')->limit(50)->with('views')->get() as $u) {
             $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
         }
 
@@ -70,7 +70,10 @@ class APIController extends Controller
             ], 200);
         }
 
-        $lastGenerate = Url::query()->where('ip', $ip)->where('created_at', '>=', $last30sec)->first();
+        $lastGenerate = Url::query()
+            ->where('ip', $ip)
+            ->where('created_at', '>=', $last30sec)
+            ->first();
 
         if ($lastGenerate) {
             return response([
@@ -145,6 +148,48 @@ class APIController extends Controller
             }
         }
         return false;
+    }
+
+    /**
+     * Find the url with the info given in the search
+     *
+     * @param $data
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function showUrlInfo(Request $request)
+    {
+        if (strlen($request->search) < 4) {
+           return response([
+               'error' => true,
+               'message' => "Hey! We don't work for no reason. Give me more than 3 characters if you want me to look into it for you :)"
+           ], 500);
+        }
+
+        //Initializing the array
+        $data = [];
+        //Looking for data
+        foreach (Url::query()
+                     ->where('url', 'LIKE', "%{$request->search}%")
+                     ->orWhere('short_url', 'LIKE', "%{$request->search}%")
+                     ->with('views')
+                     ->get() as $u)
+        {
+            $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
+        }
+
+        //Nothing was found return an error
+        if (count($data) === 0) {
+           return response([
+               'error' => true,
+               'message' => 'Nothing was found into oru database'
+           ]);
+        }
+
+        //Data found returning the value
+        return response([
+            'error' => false,
+            'data' => $data
+        ]);
     }
 
 }
