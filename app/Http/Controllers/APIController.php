@@ -57,7 +57,7 @@ class APIController extends Controller
     public function store(Request $request)
     {
         $ip = $request->ip();
-        $url = html_entity_decode(trim($request->url));
+        $url = urldecode(trim($request->url));
 
         $date = new \DateTime;
         $date->modify('-30 seconds');
