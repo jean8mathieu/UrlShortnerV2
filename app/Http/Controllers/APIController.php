@@ -38,7 +38,7 @@ class APIController extends Controller
     {
         $data = [];
 
-        foreach (Url::query()->orderBy('id', 'DESC')->limit(50)->with('views')->get() as $u) {
+        foreach (Url::query()->orderBy('id', 'DESC')->limit(50)->with('views')->limit(50)->get() as $u) {
             $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
         }
 
@@ -172,6 +172,7 @@ class APIController extends Controller
                      ->where('url', 'LIKE', "%{$request->search}%")
                      ->orWhere('short_url', 'LIKE', "%{$request->search}%")
                      ->with('views')
+                     ->limit(50)
                      ->get() as $u)
         {
             $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
