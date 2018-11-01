@@ -38,7 +38,12 @@ class APIController extends Controller
     {
         $data = [];
 
-        foreach (Url::query()->orderBy('id', 'DESC')->limit(50)->with('views')->limit(50)->get() as $u) {
+        foreach (Url::query()
+                     ->where('private', false)
+                     ->orderBy('id', 'DESC')
+                     ->limit(50)
+                     ->with('views')
+                     ->limit(50)->get() as $u) {
             $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
         }
 
@@ -58,6 +63,7 @@ class APIController extends Controller
     {
         $ip = $request->ip();
         $url = urldecode(trim($request->url));
+        $private = ($request->private == true ? true : false );
 
         $date = new \DateTime;
         $date->modify('-30 seconds');
@@ -85,7 +91,7 @@ class APIController extends Controller
         $short = $this->generateUrl($url);
 
         // Insert the url into the table
-        if (Url::create(['url' => $url, 'short_url' => $short, 'ip' => $ip])) {
+        if (Url::create(['url' => $url, 'short_url' => $short, 'ip' => $ip, 'private' => $private])) {
             return response([
                 'error' => false,
                 'message' => 'Your url have been generated!',
