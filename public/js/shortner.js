@@ -81,7 +81,7 @@ $("#generate").on('click', function () {
     var href = $('#url');
     $.ajax({
         type: "POST",
-        data: { 'url': href.val() },
+        data: { 'url': href.val(), 'private': true },
         url: "/api",
         success: function success(data) {
             if (data.error === false) {

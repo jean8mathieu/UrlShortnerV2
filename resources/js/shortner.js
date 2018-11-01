@@ -11,7 +11,7 @@ $("#generate").on('click', function () {
     let href = $('#url');
     $.ajax({
         type: "POST",
-        data: {'url': href.val()},
+        data: {'url': href.val(), 'private': true},
         url: "/api",
         success: function (data) {
             if (data.error === false) {

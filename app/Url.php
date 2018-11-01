@@ -18,7 +18,7 @@ class Url extends Model
      *
      * @var array
      */
-    protected $fillable = ['url', 'short_url', 'ip'];
+    protected $fillable = ['url', 'short_url', 'ip', 'private'];
 
     protected $hidden = ['deleted_at', 'ip'];
 
