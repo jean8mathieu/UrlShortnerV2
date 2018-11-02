@@ -133,7 +133,6 @@ $('#searchBtn').on('click', function (){
         success: function (data) {
 
             let table = generateTable(data.data);
-            console.info(JSON.stringify(table));
             $('#searchResultTable').html(table);
             $('#searchResultModal').modal('show');
             //Empty the value in the search input box
