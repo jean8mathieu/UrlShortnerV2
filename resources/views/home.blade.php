@@ -16,9 +16,7 @@
     </nav>
 
     <div class="container">
-        <div id="troll" style="position:absolute;top: 95.75%; left: 100%;">
-            <img src="/img/run.gif">
-        </div>
+
         <div class="alert"></div>
         <div class="row">
             <div class="col-md-10">
@@ -32,6 +30,13 @@
         <div class="mt-3"></div>
         <div id="tableResult"></div>
 
+        <div class="push"></div>
+
+        <footer class="footer">
+            <div id="troll" style="position:absolute;top: 95.75%; left: 100%;">
+                <img src="/img/run.gif">
+            </div>
+        </footer>
     </div>
 
     @include("modals.generatedLink")
