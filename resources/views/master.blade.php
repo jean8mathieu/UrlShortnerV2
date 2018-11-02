@@ -11,7 +11,12 @@
     <meta content="{{ route("home") }}" name="website">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="description" content="Come generate your short url here! It's free and fast!">
+    <meta name="author" content="Jean-Mathieu">
 
+
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon"/>
 </head>
 <body>
 @yield('content')

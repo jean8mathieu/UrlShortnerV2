@@ -62,8 +62,15 @@ class APIController extends Controller
     public function store(Request $request)
     {
         $ip = $request->ip();
-        $url = urldecode(trim($request->url));
-        $private = ($request->private == true ? true : false );
+        $url = strtolower(urldecode(trim($request->url)));
+        $private = ($request->private == true ? true : false);
+
+        if (strlen($url) === 0) {
+            return response([
+                'error' => true,
+                'message' => "You must enter a url before we can generate it for you..."
+            ], 200);
+        }
 
         $date = new \DateTime;
         $date->modify('-30 seconds');
@@ -165,10 +172,10 @@ class APIController extends Controller
     public function showUrlInfo(Request $request)
     {
         if (strlen($request->search) < 4) {
-           return response([
-               'error' => true,
-               'message' => "Hey! We don't work for no reason. Give me more than 3 characters if you want me to look into it for you :)"
-           ], 500);
+            return response([
+                'error' => true,
+                'message' => "Hey! We don't work for no reason. Give me more than 3 characters if you want me to look into it for you :)"
+            ], 500);
         }
 
         //Initializing the array
@@ -179,17 +186,16 @@ class APIController extends Controller
                      ->orWhere('short_url', 'LIKE', "%{$request->search}%")
                      ->with('views')
                      ->limit(50)
-                     ->get() as $u)
-        {
+                     ->get() as $u) {
             $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
         }
 
         //Nothing was found return an error
         if (count($data) === 0) {
-           return response([
-               'error' => true,
-               'message' => 'Nothing was found into oru database'
-           ]);
+            return response([
+                'error' => true,
+                'message' => 'Nothing was found into oru database'
+            ]);
         }
 
         //Data found returning the value

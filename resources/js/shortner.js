@@ -9,26 +9,32 @@ $("#generate").on('click', function () {
     disableButton($("#generate"));
     alert.html("");
     let href = $('#url');
-    $.ajax({
-        type: "POST",
-        data: {'url': href.val()},
-        url: "/api",
-        success: function (data) {
-            if (data.error === false) {
-                let url = $('#short');
-                url.html("<a href='" + data.href + "' target='_blank'>" + data.href + "</a>");
-                href.val("");
-                $('#generatedLinkModal').modal('show');
-                getTableData();
-            } else {
-                clearAlert();
-                setAlert(generateAlert('danger', data.message));
+
+    //If there's no link display an error
+    if(href.val().length === 0) {
+        setAlert(generateAlert('warning', 'You must enter a url before we can generate it for you...'))
+    } else {
+        $.ajax({
+            type: "POST",
+            data: {'url': href.val()},
+            url: "/api",
+            success: function (data) {
+                if (data.error === false) {
+                    let url = $('#short');
+                    url.html("<a href='" + data.href + "' target='_blank'>" + data.href + "</a>");
+                    href.val("");
+                    $('#generatedLinkModal').modal('show');
+                    getTableData();
+                } else {
+                    clearAlert();
+                    setAlert(generateAlert('danger', data.message));
+                }
+            },
+            error: function () {
+                setAlert(generateAlert('danger', "Something went wrong... Please try again."));
             }
-        },
-        error: function () {
-            setAlert(generateAlert('danger', "Something went wrong... Please try again."));
-        }
-    });
+        });
+    }
 });
 
 /**
@@ -180,3 +186,22 @@ function setAlert(message) {
         //clearAlert();
     }, 5000)
 }
+
+
+setInterval(function(){
+    if($('#troll').css('left') === '-100px'){
+        $('#troll').css('left', '100%');
+        animate();
+    }
+},100);
+
+$(function() {
+    animate();
+});
+
+function animate(){
+    $('#troll').animate({ left: '-100px' }, 8000, 'linear');
+}
+
+
+//});

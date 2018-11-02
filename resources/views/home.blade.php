@@ -7,7 +7,7 @@
 @section('content')
     <nav class="navbar navbar-light bg-dark text-white">
         <div class="container">
-            <a class="navbar-brand">UrlShortner</a>
+            <a class="navbar-brand">UrlShortner </a>
             <div class="form-inline">
                 <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>
@@ -16,6 +16,9 @@
     </nav>
 
     <div class="container">
+        <div id="troll" style="position:absolute;top: 95.75%; left: 100%;">
+            <img src="/img/run.gif">
+        </div>
         <div class="alert"></div>
         <div class="row">
             <div class="col-md-10">
