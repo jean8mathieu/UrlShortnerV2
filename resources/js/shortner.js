@@ -186,22 +186,3 @@ function setAlert(message) {
         //clearAlert();
     }, 5000)
 }
-
-
-setInterval(function(){
-    if($('#troll').css('left') === '-100px'){
-        $('#troll').css('left', '100%');
-        animate();
-    }
-},100);
-
-$(function() {
-    animate();
-});
-
-function animate(){
-    $('#troll').animate({ left: '-100px' }, 8000, 'linear');
-}
-
-
-//});

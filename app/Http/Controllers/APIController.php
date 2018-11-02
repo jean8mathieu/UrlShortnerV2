@@ -10,23 +10,8 @@ class APIController extends Controller
 {
     //Array of restricted keyword
     private $restrictions = [
-        "porn",
-        "sex",
-        "xxx",
-        "fuck",
-        "suck",
-        "redtube",
-        "video-one",
-        "xvideos",
-        "spankbang",
-        "xhamster",
-        "xnxx",
-        "cur.lv",
-        "tinyurl",
-        "jmdev",
-        "chaturbate",
-        "bazoocam",
-        "jizz"
+        "porn", "sex", "xxx", "fuck", "suck", "redtube", "video-one", "xvideos", "spankbang", "xhamster", "xnxx",
+        "cur.lv", "tinyurl", "jmdev", "chaturbate", "bazoocam", "jizz", "taboo", "sis", "sister", "brother"
     ];
 
     /**
@@ -69,6 +54,13 @@ class APIController extends Controller
             return response([
                 'error' => true,
                 'message' => "You must enter a url before we can generate it for you..."
+            ], 200);
+        }
+
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return response([
+                'error' => true,
+                'message' => "Invalid Url. Please try again..."
             ], 200);
         }
 
