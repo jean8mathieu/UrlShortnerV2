@@ -5,17 +5,6 @@
 @endsection
 
 @section('content')
-    <nav class="navbar navbar-light bg-dark text-white">
-        <div class="container">
-            <a class="navbar-brand">UrlShortner </a>
-            <div class="form-inline">
-                <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>
-            </div>
-        </div>
-    </nav>
-
-
     <div class="container">
         <div class="alert"></div>
         <div class="row">
