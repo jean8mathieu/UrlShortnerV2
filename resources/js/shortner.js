@@ -108,7 +108,7 @@ function generateTable(data, type = "table-hover"){
 
             table += "<tr>" +
                 "<td>" + data[i].id + "</td>" +
-                "<td><a href='" + data[i].url + "' target='_blank'>" + data[i].url + "</a></td>" +
+                "<td><a href='" + link + "' target='_blank'>" + data[i].url + "</a></td>" +
                 "<td><a href='" + link + "' target='_blank'>" + data[i].shortUrl + "</a></td>" +
                 "<td class='text-center'>" + data[i].click + "</td>" +
                 "</tr>";

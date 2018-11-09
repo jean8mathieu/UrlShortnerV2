@@ -2,7 +2,6 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-
                 <h4 class="text-center">Your Search Result</h4>
             </div>
             <div class="modal-body" id="searchResultTable">

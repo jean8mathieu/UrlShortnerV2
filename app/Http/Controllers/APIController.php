@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Bans;
+use App\Forbidden;
 use App\View;
 use Illuminate\Http\Request;
 use App\Url;
@@ -47,6 +49,16 @@ class APIController extends Controller
     public function store(Request $request)
     {
         $ip = $request->ip();
+
+        //Check if the IP being used for the request have been banned from our system
+        if (Bans::query()->where('ip', $ip)->exists()) {
+            return response([
+                'error' => true,
+                'message' => "You've been blocked from using our service." .
+                "Please contact jean-mathieu.emond@jmdev.ca if you feel this is an error"
+            ], 403);
+        }
+
         $url = strtolower(urldecode(trim($request->url)));
         $private = ($request->private == true ? true : false);
 
@@ -146,8 +158,12 @@ class APIController extends Controller
      */
     private function checkRestrictedUrl($url)
     {
-        foreach ($this->restrictions as $bad) {
-            $place = strpos($url, $bad);
+        //Get all the forbidden string
+        $forbiddeen = Forbidden::all();
+
+        //Loop through the forbidden string
+        foreach ($forbiddeen as $bad) {
+            $place = strpos($url, $bad->contains);
             if (!empty($place)) {
                 return true;
             }
