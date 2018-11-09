@@ -19,7 +19,9 @@ class ForbiddenTableSeeder extends Seeder
 
         foreach ($restrictions as $string) {
             DB::table('forbidden')->insert([
-                'contains' => $string
+                'contains' => $string,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
             ]);
         }
     }
