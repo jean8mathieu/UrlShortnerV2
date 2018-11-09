@@ -10,12 +10,6 @@ use App\Url;
 
 class APIController extends Controller
 {
-    //Array of restricted keyword
-    private $restrictions = [
-        "porn", "sex", "xxx", "fuck", "suck", "redtube", "video-one", "xvideos", "spankbang", "xhamster", "xnxx",
-        "cur.lv", "tinyurl", "jmdev", "chaturbate", "bazoocam", "jizz", "taboo", "sis", "sister", "brother"
-    ];
-
     /**
      * Display a listing of the resource.
      *
