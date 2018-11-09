@@ -86,7 +86,7 @@ function getTableData() {
  * @param data
  * @returns {string}
  */
-function generateTable(data, type = "table-hover"){
+function generateTable(data, type = "table-hover", modal = false){
     let table = "";
     if (!Array.isArray(data) || data.length === 0) {
         table += "<tr><td colspan='100' class='text-center'>There's currently no data to display...</td></tr>";
@@ -106,9 +106,14 @@ function generateTable(data, type = "table-hover"){
             let website = $('meta[name="website"]').attr('content');
             let link = website + "/" + data[i].shortUrl;
 
+            let url = data[i].url;
+            if (modal === true && url.length > 80) {
+                url = url.substring(0,80) + "...";
+            }
+
             table += "<tr>" +
                 "<td>" + data[i].id + "</td>" +
-                "<td><a href='" + link + "' target='_blank'>" + data[i].url + "</a></td>" +
+                "<td><a href='" + link + "' target='_blank'>" + url + "</a></td>" +
                 "<td><a href='" + link + "' target='_blank'>" + data[i].shortUrl + "</a></td>" +
                 "<td class='text-center'>" + data[i].click + "</td>" +
                 "</tr>";
@@ -132,7 +137,7 @@ $('#searchBtn').on('click', function (){
         dataType: "JSON",
         success: function (data) {
 
-            let table = generateTable(data.data);
+            let table = generateTable(data.data, "table-hover", true);
             $('#searchResultTable').html(table);
             $('#searchResultModal').modal('show');
             //Empty the value in the search input box
