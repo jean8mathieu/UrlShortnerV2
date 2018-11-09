@@ -81,18 +81,19 @@ class APIController extends Controller
             ], 200);
         }
 
-        $lastGenerate = Url::query()
+        $lastGenerated = Url::query()
             ->where('ip', $ip)
             ->where('created_at', '>=', $last30sec)
             ->first();
 
-        if ($lastGenerate) {
+        if ($lastGenerated) {
             return response([
                 'error' => true,
                 'message' => 'You can only generate 1 url every 30 seconds'
             ]);
         }
 
+        //Generate the short version of the url
         $short = $this->generateUrl($url);
 
         // Insert the url into the table
@@ -140,9 +141,8 @@ class APIController extends Controller
             $ip = request()->ip();
             View::create(['url_id' => $url->id, 'ip' => $ip]);
             return redirect($url->url);
-        } else {
-            return redirect('/');
         }
+        return redirect('/');
     }
 
     /**
