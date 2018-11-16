@@ -22,6 +22,4 @@
 
     @include("modals.generatedLink")
     @include("modals.searchResults")
-
-    <script src="{{ mix("/js/shortner.js") }}"></script>
 @endsection

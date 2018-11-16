@@ -20,3 +20,20 @@ Route::resource('api', 'APIController')
 Route::get('/{shortUrl}', 'APIController@show')->name('redirect');
 
 Route::post('/api/search/', 'APIController@showUrlInfo')->name('search');
+
+
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::get('login', 'Auth\LoginController@login')->name('login');
+    Route::post('login', 'Auth\LoginController@postLogin')->name('postLogin');
+    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+});
+
+
+Route::group([
+    'prefix' => 'admin',
+    'middleware' => ['auth']
+], function () {
+    Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
+});

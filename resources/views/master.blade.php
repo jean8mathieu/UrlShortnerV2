@@ -40,6 +40,8 @@
 <script src="/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.4.2/js/all.js" integrity="sha384-wp96dIgDl5BLlOXb4VMinXPNiB32VYBSoXOoiARzSTXY+tsK8yDTYfvdTyqzdGGN" crossorigin="anonymous"></script>
+<script src="{{ mix("/js/general.js") }}"></script>
+<script src="{{ mix("/js/custom.js") }}"></script>
 @yield('scripts')
 </body>
 </html>
