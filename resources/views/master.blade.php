@@ -44,6 +44,18 @@
 
 @yield('content')
 
+<div class="container">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- UrlShortner2 -->
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:970px;height:90px"
+         data-ad-client="ca-pub-5923775871016604"
+         data-ad-slot="2627761713"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
 <footer class="footer bg-dark text-white">
     <div class="container">
         <p class="text-center">Copyright ©  JMDev - {{ date("Y") }}</p>
