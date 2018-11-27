@@ -68,7 +68,7 @@ class APIController extends Controller
             return response([
                 'error' => true,
                 'message' => "Invalid Url. Please try again..."
-            ], 200);
+            ], 500);
         }
 
         $date = new \DateTime;
@@ -79,7 +79,7 @@ class APIController extends Controller
             return response([
                 'error' => true,
                 'message' => "You're not allowed to have those kind of url on this site"
-            ], 200);
+            ], 403);
         }
 
         $lastGenerated = Url::query()
@@ -91,7 +91,7 @@ class APIController extends Controller
             return response([
                 'error' => true,
                 'message' => 'You can only generate 1 url every 30 seconds'
-            ]);
+            ], 500);
         }
 
         //Generate the short version of the url
