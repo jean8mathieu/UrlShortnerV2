@@ -22,10 +22,14 @@
 <body>
 <nav class="navbar navbar-light bg-dark text-white">
     <div class="container">
-        <a class="navbar-brand">UrlShortner </a>
+        <a class="navbar-brand text-white" href="{{ Auth::user() ? route("dashboard") : route("home") }}">UrlShortner </a>
         <div class="form-inline">
-            <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>
+            @if(Auth::user())
+                <a href="{{ route("logout") }}" class="btn btn-primary">Log out</a>
+            @else
+                <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>
+            @endif
         </div>
     </div>
 </nav>
