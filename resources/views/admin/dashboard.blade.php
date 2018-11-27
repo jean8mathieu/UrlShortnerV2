@@ -39,7 +39,7 @@
                                 <tr data-id="{{ $url['id'] }}">
                                     <td>{{ $url['id'] }}</td>
                                     <td>
-                                        <a href="{{ $url['url'] }}" target="_blank">{{ $url['url'] }}</a>
+                                        <a href="{{ $url['url'] }}" target="_blank">{{ strlen($url['url']) > 75 ? substr($url['url'],0,75)."..." : $url['url'] }}</a>
                                     </td>
                                     <td>{{ $url['click'] }}</td>
                                     <td>{{ $url['ip'] }}</td>
@@ -95,7 +95,7 @@
                 <tr data-id="{{ $url['id'] }}">
                     <td>{{ $url->id }}</td>
                     <td>
-                        <a href="{{$url->url}}" target="_blank">{{ $url->url }}</a>
+                        <a href="{{$url->url}}" target="_blank">{{ strlen($url->url) > 75 ? substr($url->url,0,75)."..." : $url->url }}</a>
                     </td>
                     <td>{{ $url->views->count() }}</td>
                     <td>
