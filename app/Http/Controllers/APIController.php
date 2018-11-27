@@ -87,9 +87,6 @@ class APIController extends Controller
             ->where('created_at', '>=', $last30sec)
             ->first();
 
-
-        $lastGenerated = false;
-
         if ($lastGenerated) {
             return response([
                 'error' => true,
