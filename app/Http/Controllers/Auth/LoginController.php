@@ -60,9 +60,11 @@ class LoginController extends Controller
         $userdata = ['username' => $request->username, 'password' => $request->password];
 
         if(Auth::attempt($userdata)) {
-            return Redirect::to('dashboard');
+            echo "Correct";
+            return Redirect::to(route('dashboard'));
         } else {
-            //return Redirect::to('login');
+            echo "Bad";
+            return Redirect::to(route('login'));
         }
     }
 

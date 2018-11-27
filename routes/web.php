@@ -36,4 +36,16 @@ Route::group([
     'middleware' => ['auth']
 ], function () {
     Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
+
+    Route::resource('bans', 'BansController')->only(['index', 'create', 'show']);
+    Route::resource('forbidden', 'ForbiddenController')->only(['index', 'create', 'show']);
+
+    Route::group([
+        'prefix' => 'api'
+    ], function(){
+        Route::resource('bans', 'BansController')->only(['store', 'update', 'destroy']);
+        Route::resource('forbidden', 'ForbiddenController')->only(['store', 'update', 'destroy']);
+    });
+
+
 });
