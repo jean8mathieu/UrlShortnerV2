@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bans extends Model
 {
+    use SoftDeletes;
+
     /**
      * The table associated with the model.
      *
@@ -18,7 +21,7 @@ class Bans extends Model
      *
      * @var array
      */
-    protected $fillable = ['ip'];
+    protected $fillable = ['ip', 'notes'];
 
     protected $hidden = ['deleted_at'];
 

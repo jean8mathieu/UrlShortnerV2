@@ -197,15 +197,36 @@ class APIController extends Controller
         if (count($data) === 0) {
             return response([
                 'error' => true,
-                'message' => 'Nothing was found into oru database'
-            ]);
+                'message' => 'Nothing was found into our database'
+            ], 404);
         }
 
         //Data found returning the value
         return response([
             'error' => false,
             'data' => $data
-        ]);
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Bans  $bans
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($url)
+    {
+        $url = Url::find($url);
+
+        try {
+            if ($url->delete()) {
+                return Response(['error' => false, 'message' => "Url deleted"], 200);
+            } else {
+                return Response(['error' => true, 'message' => "We couldn't delete the url"], 500);
+            }
+        } catch (\Exception $e) {
+            return Response(['error' => true, 'message' => 'Something went wrong'], 500);
+        }
     }
 
 }

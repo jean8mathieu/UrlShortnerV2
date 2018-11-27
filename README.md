@@ -9,3 +9,5 @@ I created this url shortner for fun using the CRUD principle and the Laravel fra
 * Copy `.env.example` to `.env`
 * run the migration `php artisan migrate`
 
+## How to create an account?
+* You must run this command: `php artisan create-admin {username} {password} {email}`

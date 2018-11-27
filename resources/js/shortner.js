@@ -1,18 +1,16 @@
-//Initializing the variable
-let alert = $('.alert');
-clearAlert();
+let general = require('./general');
 
 /**
  * Generate the url through the API
  */
 $("#generate").on('click', function () {
-    disableButton($("#generate"));
-    alert.html("");
+    general.disableButton($("#generate"));
+    general.clearAlert();
     let href = $('#url');
 
     //If there's no link display an error
     if(href.val().length === 0) {
-        setAlert(generateAlert('warning', 'You must enter a url before we can generate it for you...'))
+        general.setAlert(general.generateAlert('warning', 'You must enter a url before we can generate it for you...'))
     } else {
         $.ajax({
             type: "POST",
@@ -26,12 +24,12 @@ $("#generate").on('click', function () {
                     $('#generatedLinkModal').modal('show');
                     getTableData();
                 } else {
-                    clearAlert();
-                    setAlert(generateAlert('danger', data.message));
+                    general.clearAlert();
+                    general.setAlert(general.generateAlert('danger', data.message));
                 }
             },
             error: function () {
-                setAlert(generateAlert('danger', "Something went wrong... Please try again."));
+                general.setAlert(general.generateAlert('danger', "Something went wrong... Please try again."));
             }
         });
     }
@@ -47,21 +45,6 @@ $(document).ready(function () {
         getTableData();
     }, 30000)
 });
-
-/**
- * Generate the alert at the top of the page
- * @param type
- * @param message
- * @returns {string}
- */
-function generateAlert(type, message) {
-    return "<div class=\"alert alert-" + type + "\" role=\"alert\">" +
-        message +
-        "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">" +
-        "    <span aria-hidden=\"true\">&times;</span>" +
-        "</button>" +
-        "</div>"
-}
 
 /**
  * Get the data for the table
@@ -128,7 +111,7 @@ function generateTable(data, type = "table-hover", modal = false){
 
 $('#searchBtn').on('click', function (){
     let search = $('#search');
-    disableButton($('#searchBtn'));
+    general.disableButton($('#searchBtn'));
 
     $.ajax({
         type: "POST",
@@ -145,48 +128,18 @@ $('#searchBtn').on('click', function (){
         },
         // If the request error
         error: function (data) {
-            clearAlert();
+            general.clearAlert();
             if (data.responseText === undefined) {
-                setAlert(generateAlert('danger', "Something went wrong. Please try again :("));
+                general.setAlert(general.generateAlert('danger', "Something went wrong. Please try again :("));
             } else {
-                setAlert(generateAlert('danger', JSON.parse(data.responseText).message));
+                general.setAlert(general.generateAlert('danger', JSON.parse(data.responseText).message));
             }
         },
         //If the request fail
         fail: function (data) {
-            setAlert(generateAlert('warning', data.message));
+            general.setAlert(general.generateAlert('warning', JSON.parse(data.responseText).message));
         }
     });
 });
 
-/**
- * Clear the alert
- */
-function clearAlert(){
-    alert.html("");
-}
 
-/**
- * Disable the button clicked
- * @param btn
- */
-function disableButton(btn){
-    btn.attr('disabled', true);
-    setTimeout(function(){
-        btn.attr('disabled', false);
-    }, 1000);
-}
-
-/**
- * Set alert on the page
- * @param alert
- */
-function setAlert(message) {
-    //Add alert
-    alert.append(message);
-
-    //Clear the alert after 5 seconds
-    setTimeout(function(){
-        //clearAlert();
-    }, 5000)
-}

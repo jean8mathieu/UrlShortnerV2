@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+let mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -14,6 +14,13 @@ const mix = require('laravel-mix');
 mix.copy('resources/js/bootstrap.min.js', 'public/js')
     .copy('resources/js/jquery.min.js', 'public/js')
     .copy('resources/css/bootstrap.min.css', 'public/css')
-    .js('resources/js/shortner.js', 'public/js')
+    .js([
+        'resources/js/shortner.js',
+        'resources/js/authentication.js',
+    ], 'public/js/custom.js')
+
+    .js([
+        'resources/js/admin.js'
+    ], 'public/js/admin.js')
     .sass('resources/sass/app.scss', 'public/css')
     .version();
