@@ -6,10 +6,11 @@
 
 @section('content')
     <div class="container">
+        <div class="alert"></div>
         <h2>Admin Dashboard</h2>
         <hr>
         <h3 class="text-center">Top 50 URL</h3>
-        <table class="table table-hover">
+        <table class="table table-hover urlTable">
             <thead>
             <tr>
                 <th>ID</th>
@@ -22,20 +23,31 @@
             </thead>
             <tbody>
             @forelse($topUrl as $url)
-                <tr>
+                <tr data-id="{{ $url['id'] }}">
                     <td>{{ $url['id'] }}</td>
                     <td>
                         <a href="{{ $url['url'] }}" target="_blank">{{ $url['url'] }}</a>
                     </td>
                     <td>{{ $url['click'] }}</td>
                     <td>{{ $url['ip'] }}</td>
-                    <td><button type="button" data-href="{{ route('bans.destroy', [$url['id']]) }}" class="btn btn-warning"><i class="far fa-trash-alt"></i></button></td>
                     <td>
-                        @if($url['banned'])
-                            <a href="{{ route('bans.destroy', ['ip' => $url['ip']]) }}" class="btn btn-danger"><i class="fas fa-user"></i></a>
-                        @else
-                            <a href="{{ route('bans.create', ['ip' => $url['ip']]) }}" class="btn btn-danger"><i class="fas fa-user-slash"></i></a>
-                        @endif
+                        <button type="button" data-id="{{ $url['id'] }}"
+                                data-href="{{ route('api.destroy', [$url['id']]) }}"
+                                class="btn btn-warning deleteUrl"><i class="far fa-trash-alt"></i></button>
+                    </td>
+                    <td>
+                        <div class="urlBans" data-ip="{{ $url['ip'] }}">
+                            @if($url['banned'])
+                                <button data-id="{{ $url['id'] }}" class="btn btn-success w-100 deleteBan">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                            @else
+                                <a href="{{ route('bans.create', ['ip' => $url['ip']]) }}" class="btn btn-danger w-100">
+                                    <i class="fas fa-user-slash"></i>
+                                </a>
+                            @endif
+                        </div>
+
                     </td>
                 </tr>
             @empty
@@ -57,13 +69,14 @@
                                         data-target="#collapseTwo" aria-expanded="true" aria-controls="headingTwo">
                                     Bans
                                 </button>
-                                <a href="{{ route('bans.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus"></i></a>
+                                <a href="{{ route('bans.create') }}" class="btn btn-primary float-right"><i
+                                            class="fas fa-plus"></i></a>
                             </h5>
                         </div>
 
                         <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo">
                             <div class="card card-body">
-                                <table class="table table-hover text-center">
+                                <table class="table table-hover text-center bansTable">
                                     <thead>
                                     <tr>
                                         <th>IP</th>
@@ -74,11 +87,16 @@
                                     </thead>
                                     <tbody>
                                     @forelse($bans as $ban)
-                                        <tr>
+                                        <tr data-id="{{ $ban->id }}">
                                             <td>{{ $ban->ip }}</td>
                                             <td>{{ $ban->notes }}</td>
                                             <td>{{ $ban->updated_at }}</td>
-                                            <td><a href="{{ route('bans.destroy', ['ip' => $url['ip']]) }}" class="btn btn-danger"><i class="far fa-trash-alt"></i></a></td>
+                                            <td>
+                                                <button class="btn btn-danger deleteBan" data-id="{{ $ban->id }}"
+                                                        data-href="{{ route('bans.destroy', [$ban]) }}">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -102,24 +120,32 @@
                                         data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                     Forbidden keywords
                                 </button>
-                                <a href="{{ route('forbidden.create') }}" class="btn btn-primary float-right"><i class="fas fa-plus"></i></a>
+                                <a href="{{ route('forbidden.create') }}" class="btn btn-primary float-right"><i
+                                            class="fas fa-plus"></i></a>
                             </h5>
                         </div>
 
                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
                             <div class="card card-body">
-                                <table class="table table-hover text-center">
+                                <table class="table table-hover text-center forbiddenTable">
                                     <thead>
                                     <tr>
                                         <th>Keyword</th>
                                         <th>Updated</th>
-                                        <th>Edit</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                     @forelse($forbiddens as $forbidden)
-                                        <tr>
+                                        <tr data-id="{{ $forbidden->id }}">
                                             <td>{{ $forbidden->contains }}</td>
                                             <td>{{ $forbidden->updated_at }}</td>
-                                            <td><a href="{{ route('forbidden.show', [$forbidden]) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                                            <td><a href="{{ route('forbidden.show', [$forbidden]) }}"
+                                                   class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger deleteForbidden" data-keyword="{{ $forbidden->contains }}" data-id="{{ $forbidden->id }}" data-href="{{ route("forbidden.destroy", [$forbidden->id]) }}">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @empty

@@ -100,8 +100,8 @@ function setAlert(message) {
 
     //Clear the alert after 5 seconds
     setTimeout(function () {
-        //clearAlert();
-    }, 5000);
+        clearAlert();
+    }, 3000);
 }
 
 /**
@@ -140,6 +140,128 @@ $('#validate').on('click', function () {
             if (value['password'] !== undefined) {
                 password.addClass('is-invalid');
                 setAlert(generateAlert("danger", value['password']));
+            }
+        });
+    }
+});
+
+$(".deleteBan").on("click", function () {
+    var id = $(this).data('id');
+    var href = $(this).data('href');
+
+    var btn = $(this);
+    if (confirm("Are you sure you want to delete this ban (" + id + ")?")) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "DELETE",
+            data: { id: id },
+            dataType: "JSON",
+            url: href,
+            success: function success(data) {
+                btn.removeClass("btn-success");
+                btn.removeClass("btn-danger");
+
+                $('.urlBans[data-ip="' + data.value.ip + '"]').html("<a href='" + data.value.url + "' class='btn btn-danger w-100'><i class='fas fa-user-slash'></i></a>");
+
+                $(".bansTable").find("tr[data-id='" + id + "']").html("");
+
+                setAlert(generateAlert("success", data.message));
+            }, error: function error(data) {
+                setAlert(generateAlert("danger", JSON.parse(data.responseText).message));
+            }
+        });
+    }
+});
+
+$(".deleteUrl").on("click", function () {
+    var id = $(this).data('id');
+    var href = $(this).data('href');
+
+    var btn = $(this);
+    if (confirm("Are you sure you want to delete this url (" + id + ")?")) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "DELETE",
+            data: { id: id },
+            dataType: "JSON",
+            url: href,
+            success: function success(data) {
+                btn.removeClass("btn-success");
+                btn.removeClass("btn-danger");
+
+                $(".urlTable").find("tr[data-id='" + id + "']").html("");
+                setAlert(generateAlert("success", data.message));
+            }, error: function error(data) {
+                setAlert(generateAlert("danger", JSON.parse(data.responseText).message));
+            }
+        });
+    }
+});
+
+$(".submitForm").on("click", function () {
+    var form = $("form");
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    var formData = new FormData(form[0]);
+    formData.append("_method", form.attr("method"));
+    $.ajax({
+        type: "POST",
+        url: form.attr("action"),
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function success(data) {
+            setAlert(generateAlert("success", data.message));
+        }, error: function error(data) {
+            setAlert(generateAlert("danger", JSON.parse(data.responseText).message));
+        }
+    });
+});
+
+$(".deleteForbidden").on("click", function () {
+    var id = $(this).data('id');
+    var href = $(this).data('href');
+    var keyword = $(this).data('keyword');
+
+    var btn = $(this);
+    if (confirm("Are you sure you want to delete the keyword [" + keyword + "]?")) {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "DELETE",
+            data: { id: id },
+            dataType: "JSON",
+            url: href,
+            success: function success(data) {
+                btn.removeClass("btn-success");
+                btn.removeClass("btn-danger");
+
+                $(".forbiddenTable").find("tr[data-id='" + id + "']").html("");
+                setAlert(generateAlert("success", data.message));
+            }, error: function error(data) {
+                setAlert(generateAlert("danger", JSON.parse(data.responseText).message));
             }
         });
     }

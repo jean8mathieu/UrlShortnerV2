@@ -208,4 +208,25 @@ class APIController extends Controller
         ]);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Bans  $bans
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($url)
+    {
+        $url = Url::find($url);
+
+        try {
+            if ($url->delete()) {
+                return Response(['error' => false, 'message' => "Url deleted"], 200);
+            } else {
+                return Response(['error' => true, 'message' => "We couldn't delete the url"], 500);
+            }
+        } catch (\Exception $e) {
+            return Response(['error' => true, 'message' => 'Something went wrong'], 500);
+        }
+    }
+
 }

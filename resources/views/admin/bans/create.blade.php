@@ -6,6 +6,8 @@
 
 @section('content')
     <div class="container">
+        <div class="alert"></div>
+
         <form action="{{ isset($ban) ? route('bans.update') : route('bans.store') }}" method="{{isset($ban) ? "PUT" : "POST"}}">
             @csrf
             <label>IP:</label>
@@ -18,7 +20,7 @@
 
             <div class="mt-3"></div>
 
-            <button type="submit" class="btn btn-primary w-100">Create</button>
+            <button type="button" class="btn btn-primary w-100 submitForm">Create</button>
         </form>
     </div>
 @endsection

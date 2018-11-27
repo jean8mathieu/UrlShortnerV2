@@ -75,13 +75,18 @@ class BansController extends Controller
      * @param  \App\Bans  $bans
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bans $bans)
+    public function destroy($bans)
     {
+        $bans = Bans::find($bans);
+
+        $ip = $bans->ip;
+        $url = route("bans.create", ['ip' => $ip]);
+
         try {
             if ($bans->delete()) {
-                return Response(['error' => false, 'Message' => "Ban deleted"], 200);
+                return Response(['error' => false, 'message' => "Ban deleted", "value" => ["ip" => $ip, "url" => $url]], 200);
             } else {
-                return Response(['error' => true, 'Message' => "We couldn't delete the ban"], 500);
+                return Response(['error' => true, 'message' => "We couldn't delete the ban"], 500);
             }
         } catch (\Exception $e) {
             return Response(['error' => true, 'message' => 'Something went wrong'], 500);

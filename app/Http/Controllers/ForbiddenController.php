@@ -36,9 +36,9 @@ class ForbiddenController extends Controller
     public function store(Request $request)
     {
         if(Forbidden::create(['contains' => $request->keyword])){
-            return Response(['error' => false, 'message' => "Keyword added!"]);
+            return Response(['error' => false, 'message' => "Keyword added!"], 200);
         } else {
-            return Response(['error' => true, 'message' => "Keyword couldn't be added"]);
+            return Response(['error' => true, 'message' => "Keyword couldn't be added"], 500);
         }
     }
 
@@ -79,12 +79,12 @@ class ForbiddenController extends Controller
     {
         try {
             if ($forbidden->delete()) {
-                return Response(['error' => false, 'Message' => "Keyword deleted"], 200);
+                return Response(['error' => false, 'message' => "Keyword deleted"], 200);
             } else {
-                return Response(['error' => true, 'Message' => "We couldn't delete the keyword"], 500);
+                return Response(['error' => true, 'message' => "We couldn't delete the keyword"], 500);
             }
         } catch (\Exception $e) {
-            return Response(['error' => true, 'Message' => "Something went wrong"], 500);
+            return Response(['error' => true, 'message' => "Something went wrong"], 500);
         }
     }
 }

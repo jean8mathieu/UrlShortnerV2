@@ -45,6 +45,8 @@ Route::group([
     ], function(){
         Route::resource('bans', 'BansController')->only(['store', 'update', 'destroy']);
         Route::resource('forbidden', 'ForbiddenController')->only(['store', 'update', 'destroy']);
+
+        Route::resource('api', 'APIController')->only(['destroy']);
     });
 
 
