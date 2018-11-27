@@ -1,14 +1,16 @@
+let general = require('./general');
+
 /**
  * Generate the url through the API
  */
 $("#generate").on('click', function () {
-    disableButton($("#generate"));
-    alert.html("");
+    general.disableButton($("#generate"));
+    general.clearAlert();
     let href = $('#url');
 
     //If there's no link display an error
     if(href.val().length === 0) {
-        setAlert(generateAlert('warning', 'You must enter a url before we can generate it for you...'))
+        general.setAlert(general.generateAlert('warning', 'You must enter a url before we can generate it for you...'))
     } else {
         $.ajax({
             type: "POST",
@@ -22,12 +24,12 @@ $("#generate").on('click', function () {
                     $('#generatedLinkModal').modal('show');
                     getTableData();
                 } else {
-                    clearAlert();
-                    setAlert(generateAlert('danger', data.message));
+                    general.clearAlert();
+                    general.setAlert(general.generateAlert('danger', data.message));
                 }
             },
             error: function () {
-                setAlert(generateAlert('danger', "Something went wrong... Please try again."));
+                general.setAlert(general.generateAlert('danger', "Something went wrong... Please try again."));
             }
         });
     }
@@ -109,7 +111,7 @@ function generateTable(data, type = "table-hover", modal = false){
 
 $('#searchBtn').on('click', function (){
     let search = $('#search');
-    disableButton($('#searchBtn'));
+    general.disableButton($('#searchBtn'));
 
     $.ajax({
         type: "POST",
@@ -126,16 +128,16 @@ $('#searchBtn').on('click', function (){
         },
         // If the request error
         error: function (data) {
-            clearAlert();
+            general.clearAlert();
             if (data.responseText === undefined) {
-                setAlert(generateAlert('danger', "Something went wrong. Please try again :("));
+                general.setAlert(general.generateAlert('danger', "Something went wrong. Please try again :("));
             } else {
-                setAlert(generateAlert('danger', JSON.parse(data.responseText).message));
+                general.setAlert(general.generateAlert('danger', JSON.parse(data.responseText).message));
             }
         },
         //If the request fail
         fail: function (data) {
-            setAlert(generateAlert('warning', data.message));
+            general.setAlert(general.generateAlert('warning', JSON.parse(data.responseText).message));
         }
     });
 });

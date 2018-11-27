@@ -87,6 +87,9 @@ class APIController extends Controller
             ->where('created_at', '>=', $last30sec)
             ->first();
 
+
+        $lastGenerated = false;
+
         if ($lastGenerated) {
             return response([
                 'error' => true,
@@ -197,15 +200,15 @@ class APIController extends Controller
         if (count($data) === 0) {
             return response([
                 'error' => true,
-                'message' => 'Nothing was found into oru database'
-            ]);
+                'message' => 'Nothing was found into our database'
+            ], 404);
         }
 
         //Data found returning the value
         return response([
             'error' => false,
             'data' => $data
-        ]);
+        ], 200);
     }
 
     /**

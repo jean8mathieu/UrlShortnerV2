@@ -36,6 +36,12 @@ class BansController extends Controller
     public function store(Request $request)
     {
         try {
+            //Check if IP already exist
+            if(Bans::query()->where('ip', $request->ip)->exists()) {
+                return Response(['error' => true, 'message' => 'This IP already been added...'], 500);
+            }
+
+            //Add IP to the bans table
             if (Bans::create(['ip' => $request->ip, 'notes' => $request->notes])) {
                 return Response(['error' => false, 'message' => "Ban added!"]);
             } else {

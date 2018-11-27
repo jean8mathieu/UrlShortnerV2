@@ -35,6 +35,12 @@ class ForbiddenController extends Controller
      */
     public function store(Request $request)
     {
+        //Check if keyword exist
+        if(Forbidden::query()->where('contains', $request->keyword)->exists()){
+            return Response(['error' => true, 'message' => "Keyword already exist"], 500);
+        }
+
+        //Create keyword if doesn't exist
         if(Forbidden::create(['contains' => $request->keyword])){
             return Response(['error' => false, 'message' => "Keyword added!"], 200);
         } else {

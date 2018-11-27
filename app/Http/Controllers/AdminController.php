@@ -33,8 +33,13 @@ class AdminController extends Controller
             $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'ip' => $u->ip, 'click' => $u->views->count(), 'banned' => in_array($u->ip, $ipBans)];
         }
 
+        $urlGenerated = Url::query()
+            ->with('views')
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
         $forbiddens = Forbidden::all();
 
-        return view('admin.dashboard', ['topUrl' => $data, 'bans' => $bans, 'forbiddens' => $forbiddens]);
+        return view('admin.dashboard', ['topUrl' => $data, 'bans' => $bans, 'forbiddens' => $forbiddens, 'urlGenerated' => $urlGenerated]);
     }
 }

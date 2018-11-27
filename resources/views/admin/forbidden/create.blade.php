@@ -19,3 +19,7 @@
         </form>
     </div>
 @endsection
+
+@section('scripts')
+    <script src="{{ mix("/js/admin.js") }}"></script>
+@endsection
