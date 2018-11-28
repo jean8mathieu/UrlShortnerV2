@@ -49,7 +49,7 @@ class APIController extends Controller
             return response([
                 'error' => true,
                 'message' => "You've been blocked from using our service." .
-                "Please contact jean-mathieu.emond@jmdev.ca if you feel this is an error"
+                    "Please contact jean-mathieu.emond@jmdev.ca if you feel this is an error"
             ], 403);
         }
 
@@ -211,7 +211,7 @@ class APIController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Bans  $bans
+     * @param  \App\Bans $bans
      * @return \Illuminate\Http\Response
      */
     public function destroy($url)

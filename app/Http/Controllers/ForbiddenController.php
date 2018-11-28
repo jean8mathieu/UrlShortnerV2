@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Forbidden;
+use App\Url;
 use Illuminate\Http\Request;
 
 class ForbiddenController extends Controller
@@ -30,19 +31,24 @@ class ForbiddenController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         //Check if keyword exist
-        if(Forbidden::query()->where('contains', $request->keyword)->exists()){
+        if (Forbidden::query()->where('contains', $request->keyword)->exists()) {
             return Response(['error' => true, 'message' => "Keyword already exist"], 500);
         }
 
         //Create keyword if doesn't exist
-        if(Forbidden::create(['contains' => $request->keyword])){
-            return Response(['error' => false, 'message' => "Keyword added!"], 200);
+        if (Forbidden::create(['contains' => $request->keyword])) {
+
+            if (Url::query()->where('url', 'LIKE', '%' . $request->keyword . '%')->delete()) {
+                return Response(['error' => false, 'message' => "Keyword added!"], 200);
+            } else {
+                return Response(['error' => false, 'message' => "Keyword was added but we couldn't delete the url with that keyword!"], 200);
+            }
         } else {
             return Response(['error' => true, 'message' => "Keyword couldn't be added"], 500);
         }
@@ -51,7 +57,7 @@ class ForbiddenController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Forbidden  $forbidden
+     * @param  \App\Forbidden $forbidden
      * @return \Illuminate\Http\Response
      */
     public function show(Forbidden $forbidden)
@@ -62,13 +68,13 @@ class ForbiddenController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Forbidden  $forbidden
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Forbidden $forbidden
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Forbidden $forbidden)
     {
-        if($forbidden->update(['contains' => $request->keyword])){
+        if ($forbidden->update(['contains' => $request->keyword])) {
             return Response(['error' => false, 'message' => 'Keyword updated']);
         } else {
             return Response(['error' => true, 'message' => "We were unable to update the keyword"]);
@@ -78,7 +84,7 @@ class ForbiddenController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Forbidden  $forbidden
+     * @param  \App\Forbidden $forbidden
      * @return \Illuminate\Http\Response
      */
     public function destroy(Forbidden $forbidden)

@@ -39,7 +39,8 @@
                                 <tr data-id="{{ $url['id'] }}">
                                     <td>{{ $url['id'] }}</td>
                                     <td>
-                                        <a href="{{ $url['url'] }}" target="_blank">{{ strlen($url['url']) > 75 ? substr($url['url'],0,75)."..." : $url['url'] }}</a>
+                                        <a href="{{ $url['url'] }}"
+                                           target="_blank">{{ strlen($url['url']) > 75 ? substr($url['url'],0,75)."..." : $url['url'] }}</a>
                                     </td>
                                     <td>{{ $url['click'] }}</td>
                                     <td>{{ $url['ip'] }}</td>
@@ -63,7 +64,6 @@
                                                 </a>
                                             @endif
                                         </div>
-
                                     </td>
                                 </tr>
                             @empty
@@ -86,7 +86,9 @@
             <tr>
                 <th>ID</th>
                 <th>URL</th>
+                <th>IP</th>
                 <th>Clicks</th>
+                <th></th>
                 <th></th>
             </tr>
             </thead>
@@ -95,13 +97,30 @@
                 <tr data-id="{{ $url['id'] }}">
                     <td>{{ $url->id }}</td>
                     <td>
-                        <a href="{{$url->url}}" target="_blank">{{ strlen($url->url) > 75 ? substr($url->url,0,75)."..." : $url->url }}</a>
+                        <a href="{{$url->url}}"
+                           target="_blank">{{ strlen($url->url) > 75 ? substr($url->url,0,75)."..." : $url->url }}</a>
                     </td>
+                    <td>{{ $url->ip }}</td>
                     <td>{{ $url->views->count() }}</td>
                     <td>
                         <button type="button" data-id="{{ $url->id }}"
                                 data-href="{{ route('api.destroy', [$url->id]) }}"
                                 class="btn btn-warning deleteUrl"><i class="far fa-trash-alt"></i></button>
+                    </td>
+                    <td>
+                        <div class="urlBans" data-ip="{{ $url['ip'] }}">
+                            @if($url['banned'])
+                                <button data-id="{{ $url['id'] }}"
+                                        class="btn btn-success w-100 deleteBan">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                            @else
+                                <a href="{{ route('bans.create', ['ip' => $url['ip']]) }}"
+                                   class="btn btn-danger">
+                                    <i class="fas fa-user-slash"></i>
+                                </a>
+                            @endif
+                        </div>
                     </td>
                 </tr>
             @empty
