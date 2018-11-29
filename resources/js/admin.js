@@ -210,7 +210,7 @@ function generateTable(data, type = "table-hover", modal = false) {
 
             let url = data[i].url;
             if (modal === true && url.length > 50) {
-                url = url.substring(0, 80) + "...";
+                url = url.substring(0, 50) + "...";
             }
 
             table += "<tr data-id='" + data[i].id + "'>" +
