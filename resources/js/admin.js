@@ -209,7 +209,7 @@ function generateTable(data, type = "table-hover", modal = false) {
             let website = $('meta[name="website"]').attr('content');
 
             let url = data[i].url;
-            if (modal === true && url.length > 75) {
+            if (modal === true && url.length > 50) {
                 url = url.substring(0, 80) + "...";
             }
 
