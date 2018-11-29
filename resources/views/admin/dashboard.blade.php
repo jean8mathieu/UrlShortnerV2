@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="container">
-        <div class="alert"></div>
+        <div class="alert-message"></div>
         <h2>Admin Dashboard</h2>
         <hr>
         <div class="accordion" id="accordionExample">

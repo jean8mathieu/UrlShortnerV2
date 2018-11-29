@@ -28,8 +28,8 @@ $("#generate").on('click', function () {
                     general.setAlert(general.generateAlert('danger', data.message));
                 }
             },
-            error: function () {
-                general.setAlert(general.generateAlert('danger', "Something went wrong... Please try again."));
+            error: function (data) {
+                general.setAlert(general.generateAlert('danger', JSON.parse(data.responseText).message));
             }
         });
     }

@@ -229,4 +229,54 @@ class APIController extends Controller
         }
     }
 
+
+    /**
+     * Admin Panel Search
+     *
+     * @param $data
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function searchAdmin(Request $request)
+    {
+        if (strlen($request->search) < 4) {
+            return response([
+                'error' => true,
+                'message' => "Hey! We don't work for no reason. Give me more than 3 characters if you want me to look into it for you :)"
+            ], 500);
+        }
+
+        //Initializing the array
+        $data = [];
+        //Looking for data
+        foreach (Url::query()
+                     ->where('url', 'LIKE', "%{$request->search}%")
+                     ->orWhere('short_url', 'LIKE', "%{$request->search}%")
+                     ->orWhere('id', $request->search)
+                     ->with('views')
+                     ->limit(50)
+                     ->get() as $u) {
+            $data[] = [
+                'id' => $u->id,
+                'url' => $u->url,
+                'click' => $u->views->count(),
+                'ip' => $u->ip,
+                'deleteUrl' => route('api.destroy', [$u->id])
+            ];
+        }
+
+        //Nothing was found return an error
+        if (count($data) === 0) {
+            return response([
+                'error' => true,
+                'message' => 'Nothing was found into our database'
+            ], 404);
+        }
+
+        //Data found returning the value
+        return response([
+            'error' => false,
+            'data' => $data
+        ], 200);
+    }
+
 }

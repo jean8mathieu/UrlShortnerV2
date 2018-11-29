@@ -1,4 +1,4 @@
-let alert = $('.alert');
+let alert = $('.alert-message');
 
 module.exports = {
     //Initializing the variable
@@ -11,7 +11,7 @@ module.exports = {
      * Clear the alert
      */
     clearAlert: function () {
-        $('.alert').html("");
+        alert.html("");
     },
 
     /**
@@ -30,9 +30,8 @@ module.exports = {
      * @param message
      */
     setAlert: function (message) {
-        let self = this;
         //Add alert
-        $('.alert').append(message);
+        alert.append(message);
     },
 
     /**

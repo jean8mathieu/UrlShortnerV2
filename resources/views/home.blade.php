@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="container">
-        <div class="alert"></div>
+        <div class="alert-message"></div>
         <div class="row">
             <div class="col-md-10">
                 <input type="url" name="url" id="url" class="form-control" placeholder="Url">
@@ -22,4 +22,8 @@
 
     @include("modals.generatedLink")
     @include("modals.searchResults")
+@endsection
+
+@section('scripts')
+    <script src="{{ mix("/js/custom.js") }}"></script>
 @endsection
