@@ -48,8 +48,8 @@ class APIController extends Controller
         if (Bans::query()->where('ip', $ip)->exists()) {
             return response([
                 'error' => true,
-                'message' => "You've been blocked from using our service." .
-                    "Please contact jean-mathieu.emond@jmdev.ca if you feel this is an error"
+                'message' => "You've been blocked from using our service. Your IP is {$ip}." .
+                    " Please contact jean-mathieu.emond@jmdev.ca if you feel this is an error"
             ], 403);
         }
 
