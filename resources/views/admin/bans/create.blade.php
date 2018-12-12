@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="container">
-        <div class="alert"></div>
+        <div class="alert alert-message"></div>
 
         <form action="{{ isset($ban) ? route('bans.update') : route('bans.store') }}" method="{{isset($ban) ? "PUT" : "POST"}}">
             @csrf

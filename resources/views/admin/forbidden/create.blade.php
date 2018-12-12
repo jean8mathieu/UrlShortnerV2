@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="container">
-        <div class="alert"></div>
+        <div class="alert alert-message"></div>
 
         <form action="{{ isset($forbidden) ? route("forbidden.update", [$forbidden]) : route('forbidden.store') }}" method="{{isset($forbidden) ? "PUT" : "POST"}}">
             @csrf
