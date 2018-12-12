@@ -38,8 +38,8 @@ class BansController extends Controller
     {
         try {
             //Check if IP already exist
-            if (Bans::query()->where('ip', $request->ip)->exists()) {
-                return Response(['error' => true, 'message' => 'This IP already been added...'], 500);
+            if (Bans::query()->where('ip', '=', $request->ip)->exists()) {
+                return Response(['error' => true, 'message' => "This IP already been added... {$request->ip}"], 500);
             }
 
             //Add IP to the bans table
