@@ -27,7 +27,7 @@ class AdminController extends Controller
                      ->where('private', false)
                      ->withCount('views')
                      ->orderBy('views_count', 'DESC')
-                     ->limit(5)
+                     ->limit(20)
                      ->get() as $u) {
 
             $data[] = [
