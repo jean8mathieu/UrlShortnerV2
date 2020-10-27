@@ -28,9 +28,17 @@ class AdminController extends Controller
                      ->withCount('views')
                      ->orderBy('views_count', 'DESC')
                      ->with('views')
-                     ->limit(50)->get() as $u) {
+                     ->limit(10)
+                     ->get() as $u) {
 
-            $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'ip' => $u->ip, 'click' => $u->views->count(), 'banned' => in_array($u->ip, $ipBans)];
+            $data[] = [
+                'id' => $u->id,
+                'url' => $u->url,
+                'shortUrl' => $u->short_url,
+                'ip' => $u->ip,
+                'click' => $u->views->count(),
+                'banned' => in_array($u->ip, $ipBans)
+            ];
         }
 
         $urlGenerated = Url::query()
@@ -40,6 +48,7 @@ class AdminController extends Controller
 
         $forbiddens = Forbidden::all();
 
-        return view('admin.dashboard', ['topUrl' => $data, 'bans' => $bans, 'forbiddens' => $forbiddens, 'urlGenerated' => $urlGenerated]);
+        return view('admin.dashboard',
+            ['topUrl' => $data, 'bans' => $bans, 'forbiddens' => $forbiddens, 'urlGenerated' => $urlGenerated]);
     }
 }
