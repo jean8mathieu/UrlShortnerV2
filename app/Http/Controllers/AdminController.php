@@ -23,23 +23,6 @@ class AdminController extends Controller
 
         //Loop through the url generated
         $data = [];
-        foreach (Url::query()
-                     ->where('private', false)
-                     ->withCount('views')
-                     ->orderBy('views_count', 'DESC')
-                     ->with('views')
-                     ->limit(10)
-                     ->get() as $u) {
-
-            $data[] = [
-                'id' => $u->id,
-                'url' => $u->url,
-                'shortUrl' => $u->short_url,
-                'ip' => $u->ip,
-                'click' => $u->views->count(),
-                'banned' => in_array($u->ip, $ipBans)
-            ];
-        }
 
         $urlGenerated = Url::query()
             ->with('views')
