@@ -185,6 +185,7 @@ class APIController extends Controller
         $data = [];
         //Looking for data
         foreach (Url::query()
+                     ->where('private', false)
                      ->where('url', 'LIKE', "%{$request->search}%")
                      ->orWhere('short_url', 'LIKE', "%{$request->search}%")
                      ->with('views')
