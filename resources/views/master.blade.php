@@ -26,8 +26,8 @@
         <a class="navbar-brand text-white"
            href="{{ Auth::user() ? route("dashboard") : route("home") }}">UrlShortner </a>
         <div class="form-inline">
-            <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>
+            {{--<input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>--}}
 
             @if(Auth::user())
                 <a href="{{ route("logout") }}" class="btn btn-primary ml-2">Log out</a>

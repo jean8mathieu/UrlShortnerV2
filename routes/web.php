@@ -19,7 +19,7 @@ Route::resource('api', 'APIController')
 
 Route::get('/{shortUrl}', 'APIController@show')->name('redirect');
 
-Route::post('/api/search/', 'APIController@showUrlInfo')->name('search');
+//Route::post('/api/search/', 'APIController@showUrlInfo')->name('search');
 
 
 Route::group([
