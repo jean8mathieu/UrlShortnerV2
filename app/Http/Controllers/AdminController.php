@@ -35,7 +35,7 @@ class AdminController extends Controller
                 'url' => $u->url,
                 'shortUrl' => $u->short_url,
                 'ip' => $u->ip,
-                'click' => $u->views->count(),
+                'click' => $u->views_count,
                 'banned' => in_array($u->ip, $ipBans)
             ];
         }
