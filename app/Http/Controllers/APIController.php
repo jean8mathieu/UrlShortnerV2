@@ -55,7 +55,7 @@ class APIController extends Controller
 
         $url = urldecode(trim($request->url));
         $tempUrl = strtolower($url);
-        $private = ($request->private == true ? true : false);
+        $private = $request->private == true;
 
         if (strlen($url) === 0) {
             return response([
@@ -75,7 +75,7 @@ class APIController extends Controller
         $date->modify('-30 seconds');
         $last30sec = $date->format('Y-m-d H:i:s');
 
-        if ($this->checkRestrictedUrl($tempUrl)) {
+        if (!$private && $this->checkRestrictedUrl($tempUrl)) {
             return response([
                 'error' => true,
                 'message' => "You're not allowed to have those kind of url on this site"
