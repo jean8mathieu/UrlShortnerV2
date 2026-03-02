@@ -15,9 +15,6 @@
                 <button type="button" class="btn btn-primary w-100" id="generate">Generate</button>
             </div>
         </div>
-
-        <div class="mt-3"></div>
-        <div id="tableResult"></div>
     </div>
 
     @include("modals.generatedLink")
