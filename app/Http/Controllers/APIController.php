@@ -87,7 +87,7 @@ class APIController extends Controller
             ->where('created_at', '>=', $last30sec)
             ->first();
 
-        if ($lastGenerated) {
+        if ($lastGenerated && !$private) {
             return response([
                 'error' => true,
                 'message' => 'You can only generate 1 url every 30 seconds'
