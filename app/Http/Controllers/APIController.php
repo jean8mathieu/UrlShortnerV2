@@ -90,7 +90,8 @@ class APIController extends Controller
         if ($lastGenerated && !$private) {
             return response([
                 'error' => true,
-                'message' => 'You can only generate 1 url every 30 seconds'
+                'message' => 'You can only generate 1 url every 30 seconds',
+                'is_private' => (bool)$private
             ], 500);
         }
 
