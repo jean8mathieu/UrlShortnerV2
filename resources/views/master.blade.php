@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>JMDev - @yield('title')</title>
+    <title>@yield('title', 'UrlShortner')</title>
     <script>
         //Follow the OS light/dark preference before the CSS paints
         document.documentElement.setAttribute('data-bs-theme',
@@ -15,6 +15,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <meta name="description" content="Come generate your short url here! It's free and fast!">
+    <meta name="theme-color" content="#4f46e5">
+
+    {{-- Link previews (Discord, Slack, social networks) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="JMDev">
+    <meta property="og:title" content="@yield('title', 'UrlShortner')">
+    <meta property="og:description" content="Come generate your short url here! It's free and fast!">
+    <meta property="og:url" content="{{ url()->current() }}">
     <meta name="author" content="Jean-Mathieu">
 
 

@@ -68,5 +68,18 @@ export default {
      */
     isSafeLink: function (url) {
         return /^https?:\/\//i.test(url);
+    },
+
+    /**
+     * The domain to block for a url (same rule as Url::hostOf)
+     * @param url
+     * @returns {string|null}
+     */
+    hostOf: function (url) {
+        try {
+            return new URL(url).hostname.toLowerCase().replace(/^www\./, '') || null;
+        } catch (e) {
+            return null;
+        }
     }
 };

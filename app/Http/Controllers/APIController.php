@@ -6,6 +6,7 @@ use App\Models\Bans;
 use App\Models\Forbidden;
 use App\Models\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Url;
 
 class APIController extends Controller
@@ -22,10 +23,8 @@ class APIController extends Controller
         foreach (Url::query()
                      ->where('private', false)
                      ->orderBy('id', 'DESC')
-                     ->limit(50)
-                     ->with('views')
                      ->limit(50)->get() as $u) {
-            $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
+            $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->clicks];
         }
 
         return response([
@@ -142,6 +141,8 @@ class APIController extends Controller
         if ($url = Url::query()->where('short_url', $shortUrl)->first()) {
             $ip = request()->ip();
             View::create(['url_id' => $url->id, 'ip' => $ip]);
+            //Keep the stored count in sync without touching updated_at
+            DB::table('url')->where('id', $url->id)->increment('clicks');
             return redirect($url->url);
         }
         return redirect('/');
@@ -189,10 +190,9 @@ class APIController extends Controller
                      ->where('private', false)
                      ->where('url', 'LIKE', "%{$request->search}%")
                      ->orWhere('short_url', 'LIKE', "%{$request->search}%")
-                     ->with('views')
                      ->limit(50)
                      ->get() as $u) {
-            $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->views->count()];
+            $data[] = ['id' => $u->id, 'url' => $u->url, 'shortUrl' => $u->short_url, 'click' => $u->clicks];
         }
 
         //Nothing was found return an error
@@ -254,13 +254,13 @@ class APIController extends Controller
                      ->where('url', 'LIKE', "%{$request->search}%")
                      ->orWhere('short_url', 'LIKE', "%{$request->search}%")
                      ->orWhere('id', $request->search)
-                     ->with('views')
                      ->limit(50)
                      ->get() as $u) {
             $data[] = [
                 'id' => $u->id,
                 'url' => $u->url,
-                'click' => $u->views->count(),
+                'shortUrl' => $u->short_url,
+                'click' => $u->clicks,
                 'ip' => $u->ip,
                 'deleteUrl' => route('api.destroy', [$u->id])
             ];

@@ -1,8 +1,6 @@
 @extends('master')
 
-@section('title')
-    Home
-@endsection
+@section('title', 'UrlShortner - Free & fast link shortener')
 
 @section('content')
     <section class="hero py-5">

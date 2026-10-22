@@ -1,8 +1,6 @@
 @extends('master')
 
-@section('title')
-    Admin - Bans - {{ isset($ban) ? "Edit" : "Create" }}
-@endsection
+@section('title', (isset($ban) ? 'Edit ban' : 'Ban an IP') . ' - UrlShortner')
 
 @section('content')
     <div class="container py-4">
