@@ -1,11 +1,9 @@
 @extends('master')
 
-@section('title')
-    Admin - Dashboard
-@endsection
+@section('title', 'Dashboard - UrlShortner')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-4" id="dashboard" data-block-url="{{ route('forbidden.store') }}">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
             <h1 class="h3 fw-semibold mb-0">Dashboard</h1>
 
@@ -84,16 +82,16 @@
                             </thead>
                             <tbody>
                             @forelse($urlGenerated as $url)
-                                <tr data-url-id="{{ $url->id }}">
+                                <tr data-url-id="{{ $url->id }}" data-host="{{ \App\Models\Url::hostOf($url->url) }}">
                                     <td class="ps-3 text-body-secondary">{{ $url->id }}</td>
                                     <td>@include('admin.partials.url-link', ['url' => $url->url, 'short' => $url->short_url])</td>
                                     <td class="font-monospace small">{{ $url->ip }}</td>
-                                    <td class="text-end">{{ number_format($url->views_count) }}</td>
+                                    <td class="text-end">{{ number_format($url->clicks) }}</td>
                                     <td class="small text-body-secondary text-nowrap" title="{{ $url->created_at }}">
                                         {{ $url->created_at?->diffForHumans() }}
                                     </td>
                                     <td class="text-end pe-3">
-                                        @include('admin.partials.url-actions', ['id' => $url->id, 'ip' => $url->ip])
+                                        @include('admin.partials.url-actions', ['id' => $url->id, 'ip' => $url->ip, 'url' => $url->url])
                                     </td>
                                 </tr>
                             @empty
@@ -126,13 +124,13 @@
                             </thead>
                             <tbody>
                             @forelse($topUrl as $url)
-                                <tr data-url-id="{{ $url['id'] }}">
+                                <tr data-url-id="{{ $url['id'] }}" data-host="{{ \App\Models\Url::hostOf($url['url']) }}">
                                     <td class="ps-3 text-body-secondary">{{ $url['id'] }}</td>
                                     <td>@include('admin.partials.url-link', ['url' => $url['url'], 'short' => $url['shortUrl']])</td>
                                     <td class="font-monospace small">{{ $url['ip'] }}</td>
                                     <td class="text-end fw-semibold">{{ number_format($url['click']) }}</td>
                                     <td class="text-end pe-3">
-                                        @include('admin.partials.url-actions', ['id' => $url['id'], 'ip' => $url['ip']])
+                                        @include('admin.partials.url-actions', ['id' => $url['id'], 'ip' => $url['ip'], 'url' => $url['url']])
                                     </td>
                                 </tr>
                             @empty

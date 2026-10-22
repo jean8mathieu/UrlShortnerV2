@@ -60,6 +60,34 @@ $(document).on("click", ".deleteUrl", function () {
     }
 });
 
+//Block every url on a domain by adding it as a forbidden keyword
+$(document).on("click", ".blockDomain", function () {
+    let host = $(this).data('host');
+
+    if (confirm("Block every url on " + host + "?\n\nExisting urls containing \"" + host + "\" will be deleted and new ones refused.")) {
+        $.ajax({
+            type: "POST",
+            url: $('#dashboard').data('block-url'),
+            data: {keyword: host},
+            dataType: "JSON",
+            success: function (data) {
+                if (data.error) {
+                    general.setAlert(general.generateAlert("danger", data.message));
+                    return;
+                }
+
+                $(".urlTable, .urlListTable").each(function () {
+                    removeRows($(this), "tr[data-host='" + host + "']", "There's no url");
+                });
+                updateCount('.forbiddenCount', 1);
+                general.setAlert(general.generateAlert("success", "Blocked " + host + ". " + data.message));
+            }, error: function (data) {
+                general.setAlert(general.generateAlert("danger", general.errorMessage(data)));
+            }
+        });
+    }
+});
+
 //Submit a form (Bans or Forbidden)
 $(".ajax-form").on("submit", function (e) {
     e.preventDefault();
@@ -187,23 +215,34 @@ function generateTable(data) {
 
     for (let i = 0; i < data.length; i++) {
         let url = data[i].url;
+        let host = general.hostOf(url);
         let link = general.isSafeLink(url)
             ? $("<a target='_blank' rel='noopener noreferrer' class='d-block text-truncate'>").attr('href', url)
             : $("<span class='d-block text-truncate text-danger'>");
         link.text(url).attr('title', url);
 
+        let actions = $("<div class='d-inline-flex gap-1'>").append(
+            $("<button type='button' class='btn btn-sm btn-outline-secondary deleteUrl' title='Delete url'>")
+                .attr('data-id', data[i].id)
+                .attr('data-href', data[i].deleteUrl)
+                .append("<i class='bi bi-trash3'></i>")
+        );
+        if (host) {
+            actions.append(
+                $("<button type='button' class='btn btn-sm btn-outline-warning blockDomain'>")
+                    .attr('data-host', host)
+                    .attr('title', 'Block ' + host)
+                    .append("<i class='bi bi-slash-circle'></i>")
+            );
+        }
+
         body.append(
-            $("<tr>").attr('data-url-id', data[i].id).append(
+            $("<tr>").attr('data-url-id', data[i].id).attr('data-host', host || '').append(
                 $("<td class='ps-3 text-body-secondary'>").text(data[i].id),
                 $("<td>").append($("<div class='url-cell'>").append(link)),
                 $("<td class='text-end'>").text(data[i].click),
                 $("<td class='font-monospace small'>").text(data[i].ip),
-                $("<td class='text-end pe-3'>").append(
-                    $("<button type='button' class='btn btn-sm btn-outline-secondary deleteUrl' title='Delete url'>")
-                        .attr('data-id', data[i].id)
-                        .attr('data-href', data[i].deleteUrl)
-                        .append("<i class='bi bi-trash3'></i>")
-                )
+                $("<td class='text-end pe-3'>").append(actions)
             )
         );
     }

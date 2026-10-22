@@ -1,8 +1,6 @@
 @extends('master')
 
-@section('title')
-    Admin - Forbidden - List
-@endsection
+@section('title', 'Forbidden keywords - UrlShortner')
 
 @section('content')
     <div class="container">

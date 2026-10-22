@@ -1,8 +1,6 @@
 @extends('master')
 
-@section('title')
-    Log in
-@endsection
+@section('title', 'Log in - UrlShortner')
 
 @section('content')
     <div class="container py-5">

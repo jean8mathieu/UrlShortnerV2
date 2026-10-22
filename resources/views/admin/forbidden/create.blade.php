@@ -1,8 +1,6 @@
 @extends('master')
 
-@section('title')
-    Admin - Forbidden - {{isset($forbidden) ? "Edit" : "Create"}}
-@endsection
+@section('title', (isset($forbidden) ? 'Edit keyword' : 'Add a keyword') . ' - UrlShortner')
 
 @section('content')
     <div class="container py-4">

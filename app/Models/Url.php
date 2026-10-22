@@ -25,6 +25,8 @@ class Url extends Model
 
     protected $hidden = ['deleted_at', 'ip'];
 
+    protected $casts = ['clicks' => 'integer'];
+
     /**
      * Return the views from the url
      *
@@ -33,5 +35,18 @@ class Url extends Model
     public function views()
     {
         return $this->hasMany(View::class);
+    }
+
+    /**
+     * The domain to block for a url: lowercase and without a leading "www."
+     *
+     * @param string $url
+     * @return string|null
+     */
+    public static function hostOf($url)
+    {
+        $host = parse_url((string) $url, PHP_URL_HOST);
+
+        return $host ? preg_replace('/^www\./', '', strtolower($host)) : null;
     }
 }

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Bans;
 use App\Models\Forbidden;
 use App\Models\Url;
-use App\Models\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AdminController extends Controller
 {
@@ -19,12 +19,11 @@ class AdminController extends Controller
         //Map each banned IP to its ban so the url tables can link to it
         $bannedIps = $bans->keyBy('ip');
 
-        //Loop through the url generated
+        //Top 50 by stored click count (indexed, no counting of the view table)
         $data = [];
         foreach (Url::query()
                      ->where('private', false)
-                     ->withCount('views')
-                     ->orderBy('views_count', 'DESC')
+                     ->orderBy('clicks', 'DESC')
                      ->limit(50)
                      ->get() as $u) {
 
@@ -33,21 +32,26 @@ class AdminController extends Controller
                 'url' => $u->url,
                 'shortUrl' => $u->short_url,
                 'ip' => $u->ip,
-                'click' => $u->views_count,
+                'click' => $u->clicks,
                 'banned' => $bannedIps->has($u->ip)
             ];
         }
 
-        $urlGenerated = Url::query()
-            ->withCount('views')
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
-
         $forbiddens = Forbidden::all();
 
-        $stats = [
+        //Counting 600k+ urls is slow, so the totals refresh every 5 minutes
+        $totals = Cache::remember('dashboard.totals', now()->addMinutes(5), fn () => [
             'urls' => Url::count(),
-            'clicks' => View::count(),
+            'clicks' => (int) Url::sum('clicks'),
+        ]);
+
+        $urlGenerated = Url::query()
+            ->orderBy('id', 'DESC')
+            ->paginate(10, total: $totals['urls']);
+
+        $stats = [
+            'urls' => $totals['urls'],
+            'clicks' => $totals['clicks'],
             'bans' => $bans->count(),
             'keywords' => $forbiddens->count(),
         ];

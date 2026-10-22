@@ -1,8 +1,6 @@
 @extends('master')
 
-@section('title')
-    Admin - Bans - List
-@endsection
+@section('title', 'Bans - UrlShortner')
 
 @section('content')
     <div class="container">
