@@ -1,145 +1,101 @@
-let general = require('./general');
+import $ from 'jquery';
+import general from './general';
+
+let form = $('#shortenForm');
+let input = $('#url');
+let button = $('#generate');
+let result = $('#result');
+let shortLink = $('#shortLink');
+let copyButton = $('#copyLink');
 
 /**
  * Generate the url through the API
  */
-$("#generate").on('click', function () {
-    general.disableButton($("#generate"));
+form.on('submit', function (e) {
+    e.preventDefault();
     general.clearAlert();
-    let href = $('#url');
+
+    let url = input.val().trim();
 
     //If there's no link display an error
-    if(href.val().length === 0) {
-        general.setAlert(general.generateAlert('warning', 'You must enter a url before we can generate it for you...'))
-    } else {
-        $.ajax({
-            type: "POST",
-            data: {'url': href.val()},
-            url: "/api",
-            success: function (data) {
-                if (data.error === false) {
-                    let url = $('#short');
-                    url.html("<a href='" + data.href + "' target='_blank'>" + data.href + "</a>");
-                    href.val("");
-                    $('#generatedLinkModal').modal('show');
-                    getTableData();
-                } else {
-                    general.clearAlert();
-                    general.setAlert(general.generateAlert('danger', data.message));
-                }
-            },
-            error: function (data) {
-                general.setAlert(general.generateAlert('danger', JSON.parse(data.responseText).message));
-            }
-        });
-    }
-});
-
-/**
- * Generate the table and reload it every 30 sec
- */
-$(document).ready(function () {
-    getTableData();
-
-    setInterval(function () {
-        getTableData();
-    }, 30000)
-});
-
-/**
- * Get the data for the table
- */
-function getTableData() {
-    $.ajax({
-        type: "GET",
-        url: "/api",
-        dataType: "JSON",
-        success: function (data) {
-            let table = generateTable(data.data);
-            $('#tableResult').html(table);
-        }, error: function (data) {
-
-        }
-    });
-}
-
-/**
- * Generate the table
- *
- * @param data
- * @returns {string}
- */
-function generateTable(data, type = "table-hover", modal = false){
-    let table = "";
-    if (!Array.isArray(data) || data.length === 0) {
-        table += "<tr><td colspan='100' class='text-center'>There's currently no data to display...</td></tr>";
-    } else {
-
-        table = "<table class=\"table " + type +"\">" +
-            "            <thead>" +
-            "            <tr>" +
-            "                <th>ID</th>" +
-            "                <th>Url</th>" +
-            "                <th>Short</th>" +
-            "                <th>Click</th>" +
-            "            </tr>" +
-            "            </thead>";
-
-        for (let i = 0; i < data.length; i++) {
-            let website = $('meta[name="website"]').attr('content');
-            let link = website + "/" + data[i].shortUrl;
-
-            let url = data[i].url;
-            if (modal === true && url.length > 80) {
-                url = url.substring(0,80) + "...";
-            }
-
-            table += "<tr>" +
-                "<td>" + data[i].id + "</td>" +
-                "<td><a href='" + link + "' target='_blank'>" + url + "</a></td>" +
-                "<td><a href='" + link + "' target='_blank'>" + data[i].shortUrl + "</a></td>" +
-                "<td class='text-center'>" + data[i].click + "</td>" +
-                "</tr>";
-        }
-
-        table += "</table>";
+    if (url.length === 0) {
+        general.setAlert(general.generateAlert('warning', 'You must enter a url before we can generate it for you...'));
+        input.trigger('focus');
+        return;
     }
 
-    return table;
-}
+    //Most people paste "example.com" without the scheme
+    if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(url)) {
+        url = 'https://' + url;
+    }
 
-
-$('#searchBtn').on('click', function (){
-    let search = $('#search');
-    general.disableButton($('#searchBtn'));
+    setLoading(true);
 
     $.ajax({
         type: "POST",
-        url: "/api/search",
-        data:{search: search.val(), _token: $('meta[name="csrf-token"]').attr('content')},
+        data: {'url': url},
+        url: "/api",
         dataType: "JSON",
         success: function (data) {
-
-            let table = generateTable(data.data, "table-hover", true);
-            $('#searchResultTable').html(table);
-            $('#searchResultModal').modal('show');
-            //Empty the value in the search input box
-            search.val("");
-        },
-        // If the request error
-        error: function (data) {
-            general.clearAlert();
-            if (data.responseText === undefined) {
-                general.setAlert(general.generateAlert('danger', "Something went wrong. Please try again :("));
+            if (data.error === false) {
+                shortLink.attr('href', data.href).text(data.href);
+                resetCopyButton();
+                result.removeClass('d-none');
+                input.val("");
             } else {
-                general.setAlert(general.generateAlert('danger', JSON.parse(data.responseText).message));
+                general.setAlert(general.generateAlert('danger', data.message));
             }
         },
-        //If the request fail
-        fail: function (data) {
-            general.setAlert(general.generateAlert('warning', JSON.parse(data.responseText).message));
+        error: function (data) {
+            general.setAlert(general.generateAlert('danger', general.errorMessage(data)));
+        },
+        complete: function () {
+            setLoading(false);
         }
     });
 });
 
+/**
+ * Copy the generated link to the clipboard
+ */
+copyButton.on('click', function () {
+    let link = shortLink.attr('href');
 
+    //The clipboard API needs a secure context and can be denied, so fall back to the old way
+    let copied = navigator.clipboard && window.isSecureContext
+        ? navigator.clipboard.writeText(link).catch(function () {
+            return legacyCopy(link);
+        })
+        : legacyCopy(link);
+
+    copied.then(function () {
+        copyButton.removeClass('btn-outline-primary').addClass('btn-success');
+        copyButton.find('i').attr('class', 'bi bi-check-lg');
+        copyButton.find('span').text('Copied!');
+        setTimeout(resetCopyButton, 2000);
+    }).catch(function () {
+        general.setAlert(general.generateAlert('warning', "We couldn't copy the link. Please copy it manually."));
+    });
+});
+
+function resetCopyButton() {
+    copyButton.removeClass('btn-success').addClass('btn-outline-primary');
+    copyButton.find('i').attr('class', 'bi bi-clipboard');
+    copyButton.find('span').text('Copy');
+}
+
+/**
+ * Copy fallback for http:// (navigator.clipboard needs a secure context)
+ */
+function legacyCopy(text) {
+    let field = $('<textarea class="visually-hidden" readonly>').val(text).appendTo('body');
+    field[0].select();
+    let ok = document.execCommand('copy');
+    field.remove();
+    return ok ? Promise.resolve() : Promise.reject();
+}
+
+function setLoading(loading) {
+    button.prop('disabled', loading);
+    button.find('.spinner-border').toggleClass('d-none', !loading);
+}

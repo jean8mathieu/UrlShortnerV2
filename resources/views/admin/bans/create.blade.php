@@ -5,26 +5,45 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="alert alert-message"></div>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <a href="{{ route('dashboard') }}#bans" class="small d-inline-block mb-3">
+                    <i class="bi bi-arrow-left"></i> Back to dashboard
+                </a>
 
-        <form action="{{ isset($ban) ? route('bans.update') : route('bans.store') }}" method="{{isset($ban) ? "PUT" : "POST"}}">
-            @csrf
-            <label>IP:</label>
-            <input type="text" name="ip" placeholder="IP" class="form-control" value="{{ $ban->ip ?? (Request::get('ip') ?? "") }}" required>
+                <div class="alert-message"></div>
 
-            <div class="mt-3"></div>
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h1 class="h4 fw-semibold mb-4">{{ isset($ban) ? "Edit ban" : "Ban an IP" }}</h1>
 
-            <label>Notes:</label>
-            <input type="text" name="notes" placeholder="Notes" class="form-control" {{ $ban->notes ?? "" }} required>
+                        <form class="ajax-form" action="{{ isset($ban) ? route('bans.update') : route('bans.store') }}" method="{{isset($ban) ? "PUT" : "POST"}}">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="ip" class="form-label">IP address</label>
+                                <input type="text" name="ip" id="ip" placeholder="203.0.113.7" class="form-control font-monospace"
+                                       value="{{ $ban->ip ?? (Request::get('ip') ?? "") }}" required>
+                            </div>
 
-            <div class="mt-3"></div>
+                            <div class="mb-4">
+                                <label for="notes" class="form-label">Notes</label>
+                                <input type="text" name="notes" id="notes" placeholder="Why is this IP banned?"
+                                       class="form-control" value="{{ $ban->notes ?? "" }}" required>
+                                <div class="form-text">Every url created from this IP will be deleted.</div>
+                            </div>
 
-            <button type="button" class="btn btn-primary w-100 submitForm">Create</button>
-        </form>
+                            <button type="submit" class="btn btn-danger w-100 submitForm">
+                                <i class="bi bi-person-slash"></i> Ban IP
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
 @section('scripts')
-    <script src="{{ mix("/js/admin.js") }}"></script>
+    @vite('resources/js/admin.js')
 @endsection

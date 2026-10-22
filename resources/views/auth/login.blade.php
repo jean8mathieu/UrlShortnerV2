@@ -5,34 +5,43 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="alert"></div>
-        <form id="loginForm" method="post" action="{{ route('postLogin') }}">
-            @csrf
-            <div class="col-md-6 ml-auto mr-auto">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3 class="text-center">Login</h3>
-                    </div>
-                    <div class="col-md-12">
-                        <input type="text" name="username" placeholder="Username" id="username" class="form-control">
-                    </div>
-                </div>
-                <div class="mt-3"></div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <input type="password" name="password" placeholder="Password" id="password" class="form-control">
-                    </div>
-                </div>
-                <div class="mt-3"></div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary w-100" id="validate">Log in</button>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-sm-9 col-md-6 col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <span class="feature-icon mb-2"><i class="bi bi-shield-lock"></i></span>
+                            <h1 class="h4 fw-semibold mb-0">Admin login</h1>
+                        </div>
+
+                        @if(session('error'))
+                            <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+                                <i class="bi bi-exclamation-octagon-fill"></i>
+                                <div>{{ session('error') }}</div>
+                            </div>
+                        @endif
+
+                        <form id="loginForm" method="post" action="{{ route('postLogin') }}">
+                            @csrf
+                            <div class="form-floating mb-3">
+                                <input type="text" name="username" id="username" class="form-control"
+                                       placeholder="Username" value="{{ old('username') }}"
+                                       autocomplete="username" required autofocus>
+                                <label for="username">Username</label>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <input type="password" name="password" id="password" class="form-control"
+                                       placeholder="Password" autocomplete="current-password" required>
+                                <label for="password">Password</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100" id="validate">Log in</button>
+                        </form>
                     </div>
                 </div>
             </div>
-
-
-        </form>
+        </div>
     </div>
 @endsection

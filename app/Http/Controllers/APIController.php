@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Bans;
-use App\Forbidden;
-use App\View;
+use App\Models\Bans;
+use App\Models\Forbidden;
+use App\Models\View;
 use Illuminate\Http\Request;
-use App\Url;
+use App\Models\Url;
 
 class APIController extends Controller
 {
@@ -213,7 +213,7 @@ class APIController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Bans $bans
+     * @param  \App\Models\Bans $bans
      * @return \Illuminate\Http\Response
      */
     public function destroy($url)

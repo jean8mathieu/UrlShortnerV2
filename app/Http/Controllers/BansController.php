@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Bans;
-use App\Url;
+use App\Models\Bans;
+use App\Models\Url;
 use Illuminate\Http\Request;
 
 class BansController extends Controller
@@ -61,7 +61,7 @@ class BansController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Bans $bans
+     * @param  \App\Models\Bans $bans
      * @return \Illuminate\Http\Response
      */
     public function show(Bans $bans)
@@ -73,7 +73,7 @@ class BansController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \App\Bans $bans
+     * @param  \App\Models\Bans $bans
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Bans $bans)
@@ -84,7 +84,7 @@ class BansController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Bans $bans
+     * @param  \App\Models\Bans $bans
      * @return \Illuminate\Http\Response
      */
     public function destroy($bans)

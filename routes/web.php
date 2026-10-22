@@ -1,33 +1,44 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\APIController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BansController;
+use App\Http\Controllers\ForbiddenController;
+use App\Http\Controllers\MainController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
+| routes are loaded by bootstrap/app.php within a group which
 | contains the "web" middleware group. Now create something great!
 |
 */
 
-Route::get('/', 'MainController@getIndex')->name("home");
+Route::get('/', [MainController::class, 'getIndex'])->name("home");
 
 
-Route::resource('api', 'APIController')
+Route::resource('api', APIController::class)
     ->except(['create', 'destroy', 'edit', 'update', 'destroy']);
 
-Route::get('/{shortUrl}', 'APIController@show')->name('redirect');
+//Must stay above the short url catch-all
+Route::redirect('/login', '/auth/login');
 
-//Route::post('/api/search/', 'APIController@showUrlInfo')->name('search');
+Route::get('/{shortUrl}', [APIController::class, 'show'])->name('redirect');
+
+//Route::post('/api/search/', [APIController::class, 'showUrlInfo'])->name('search');
 
 
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    Route::get('login', 'Auth\LoginController@login')->name('login');
-    Route::post('login', 'Auth\LoginController@postLogin')->name('postLogin');
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+    Route::get('login', [LoginController::class, 'login'])->name('login');
+    Route::post('login', [LoginController::class, 'postLogin'])->name('postLogin');
+    Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 
@@ -35,20 +46,20 @@ Route::group([
     'prefix' => 'admin',
     'middleware' => ['auth']
 ], function () {
-    Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
+    Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    Route::resource('bans', 'BansController')->only(['index', 'create', 'show']);
-    Route::resource('forbidden', 'ForbiddenController')->only(['index', 'create', 'show']);
+    Route::resource('bans', BansController::class)->only(['index', 'create', 'show']);
+    Route::resource('forbidden', ForbiddenController::class)->only(['index', 'create', 'show']);
 
     Route::group([
         'prefix' => 'api'
     ], function(){
-        Route::resource('bans', 'BansController')->only(['store', 'update', 'destroy']);
-        Route::resource('forbidden', 'ForbiddenController')->only(['store', 'update', 'destroy']);
+        Route::resource('bans', BansController::class)->only(['store', 'update', 'destroy']);
+        Route::resource('forbidden', ForbiddenController::class)->only(['store', 'update', 'destroy']);
 
-        Route::post('search', 'APIController@searchAdmin')->name('searchAdmin');
+        Route::post('search', [APIController::class, 'searchAdmin'])->name('searchAdmin');
 
-        Route::resource('api', 'APIController')->only(['destroy']);
+        Route::resource('api', APIController::class)->only(['destroy']);
     });
 
 
