@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Forbidden;
-use App\User;
+use App\Models\Forbidden;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 

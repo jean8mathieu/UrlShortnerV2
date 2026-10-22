@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
-class LoginController extends Controller
+class LoginController extends Controller implements HasMiddleware
 {
     /*
     |--------------------------------------------------------------------------
@@ -17,28 +18,18 @@ class LoginController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
+    | redirecting them to the admin dashboard.
     |
     */
 
-    use AuthenticatesUsers;
-
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
+     * Get the middleware that should be assigned to the controller.
      */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public static function middleware(): array
     {
-        $this->middleware('guest')->except('logout');
+        return [
+            new Middleware('guest', except: ['logout']),
+        ];
     }
 
     public function login() {
@@ -54,17 +45,19 @@ class LoginController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-           return Redirect::to('login');
+           return Redirect::to(route('login'))
+               ->withInput($request->only('username'))
+               ->with('error', 'Please enter your username and password.');
         }
 
         $userdata = ['username' => $request->username, 'password' => $request->password];
 
         if(Auth::attempt($userdata)) {
-            echo "Correct";
             return Redirect::to(route('dashboard'));
         } else {
-            echo "Bad";
-            return Redirect::to(route('login'));
+            return Redirect::to(route('login'))
+                ->withInput($request->only('username'))
+                ->with('error', 'Invalid username or password.');
         }
     }
 

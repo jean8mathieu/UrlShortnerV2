@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Bans;
-use App\Forbidden;
-use App\Url;
+use App\Models\Bans;
+use App\Models\Forbidden;
+use App\Models\Url;
+use App\Models\View;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -15,11 +16,8 @@ class AdminController extends Controller
         //Getting all the bans from the database
         $bans = Bans::all();
 
-        //Creating an ipBans array
-        $ipBans = [];
-        foreach ($bans as $ban) {
-            $ipBans[] = $ban->ip;
-        }
+        //Map each banned IP to its ban so the url tables can link to it
+        $bannedIps = $bans->keyBy('ip');
 
         //Loop through the url generated
         $data = [];
@@ -36,18 +34,26 @@ class AdminController extends Controller
                 'shortUrl' => $u->short_url,
                 'ip' => $u->ip,
                 'click' => $u->views_count,
-                'banned' => in_array($u->ip, $ipBans)
+                'banned' => $bannedIps->has($u->ip)
             ];
         }
 
         $urlGenerated = Url::query()
-            ->with('views')
+            ->withCount('views')
             ->orderBy('id', 'DESC')
             ->paginate(10);
 
         $forbiddens = Forbidden::all();
 
+        $stats = [
+            'urls' => Url::count(),
+            'clicks' => View::count(),
+            'bans' => $bans->count(),
+            'keywords' => $forbiddens->count(),
+        ];
+
         return view('admin.dashboard',
-            ['topUrl' => $data, 'bans' => $bans, 'forbiddens' => $forbiddens, 'urlGenerated' => $urlGenerated]);
+            ['topUrl' => $data, 'bans' => $bans, 'bannedIps' => $bannedIps, 'forbiddens' => $forbiddens,
+                'urlGenerated' => $urlGenerated, 'stats' => $stats]);
     }
 }

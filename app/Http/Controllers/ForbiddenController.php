@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Forbidden;
-use App\Url;
+use App\Models\Forbidden;
+use App\Models\Url;
 use Illuminate\Http\Request;
 
 class ForbiddenController extends Controller
@@ -57,7 +57,7 @@ class ForbiddenController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Forbidden $forbidden
+     * @param  \App\Models\Forbidden $forbidden
      * @return \Illuminate\Http\Response
      */
     public function show(Forbidden $forbidden)
@@ -69,7 +69,7 @@ class ForbiddenController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \App\Forbidden $forbidden
+     * @param  \App\Models\Forbidden $forbidden
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Forbidden $forbidden)
@@ -84,7 +84,7 @@ class ForbiddenController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Forbidden $forbidden
+     * @param  \App\Models\Forbidden $forbidden
      * @return \Illuminate\Http\Response
      */
     public function destroy(Forbidden $forbidden)

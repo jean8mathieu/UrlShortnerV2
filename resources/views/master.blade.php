@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>JMDev - @yield('title')</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ mix("/css/app.css") }}">
-    <script src="/js/jquery.min.js"></script>
-    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.4.2/css/all.css"
-          integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+    <script>
+        //Follow the OS light/dark preference before the CSS paints
+        document.documentElement.setAttribute('data-bs-theme',
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <meta content="{{ route("home") }}" name="website">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -20,62 +21,50 @@
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon"/>
 </head>
-<body>
-<nav class="navbar navbar-light bg-dark text-white">
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar border-bottom bg-body">
     <div class="container">
-        <a class="navbar-brand text-white"
-           href="{{ Auth::user() ? route("dashboard") : route("home") }}">UrlShortner </a>
-        <div class="form-inline">
-            {{--<input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary my-2 my-sm-0" id="searchBtn" type="button">Search</button>--}}
+        <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" href="{{ route("home") }}">
+            <i class="bi bi-link-45deg fs-3 lh-1"></i> UrlShortner
+        </a>
 
-            @if(Auth::user())
-                <a href="{{ route("logout") }}" class="btn btn-primary ml-2">Log out</a>
-            @endif
-        </div>
+        @if(Auth::user())
+            <ul class="navbar-nav flex-row gap-3 me-auto ms-2">
+                <li class="nav-item">
+                    <a href="{{ route("home") }}" @class(['nav-link', 'active' => Request::routeIs('home')])
+                       @if(Request::routeIs('home')) aria-current="page" @endif>
+                        <i class="bi bi-scissors"></i> <span class="d-none d-sm-inline">Shorten</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route("dashboard") }}" @class(['nav-link', 'active' => Request::is('admin/*')])
+                       @if(Request::is('admin/*')) aria-current="page" @endif>
+                        <i class="bi bi-speedometer2"></i> <span class="d-none d-sm-inline">Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-body-secondary small d-none d-md-inline">
+                    <i class="bi bi-person-circle"></i> {{ Auth::user()->username }}
+                </span>
+                <a href="{{ route("logout") }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Log out
+                </a>
+            </div>
+        @endif
     </div>
 </nav>
 
-@if(!Request::is('auth/*'))
-    <div class="container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- UrlShortner2 -->
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:970px;height:90px"
-             data-ad-client="ca-pub-5923775871016604"
-             data-ad-slot="2627761713"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-@endif
+<main class="flex-grow-1">
+    @yield('content')
+</main>
 
-@yield('content')
-
-@if(!Request::is('auth/*'))
-    <div class="container">
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- UrlShortner2 -->
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:970px;height:90px"
-             data-ad-client="ca-pub-5923775871016604"
-             data-ad-slot="2627761713"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-@endif
-
-<footer class="footer bg-dark text-white">
-    <div class="container">
-        <p class="text-center">Copyright © JMDev - {{ date("Y") }}</p>
+<footer class="site-footer border-top bg-body py-3">
+    <div class="container text-center text-body-secondary">
+        Copyright © JMDev - {{ date("Y") }}
     </div>
 </footer>
-<script src="/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.4.2/js/all.js"
-        integrity="sha384-wp96dIgDl5BLlOXb4VMinXPNiB32VYBSoXOoiARzSTXY+tsK8yDTYfvdTyqzdGGN"
-        crossorigin="anonymous"></script>
 @yield('scripts')
 </body>
 </html>
